@@ -24,6 +24,7 @@ contract Faucet is Owned, Logger, IFaucet {
 
     function addFunds() payable override external {
         address funder = msg.sender;
+    
 
         if(!funders[funder]){
             uint index = numOfFunders++;
