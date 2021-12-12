@@ -15,9 +15,9 @@ function App() {
 
   const [account, setAccount] = useState(null);
   const [balance, setBalance] = useState(null);
-  const [reloadEffect, setReloadEffect] = useState(false)
+  const [shouldReload, reload] = useState(false)
 
-  const reloadEffector = () => setReloadEffect(!reloadEffect)
+  const reloadEffect = useCallback(() => reload(!shouldReload),[shouldReload])
 
   React.useEffect(() => {
     const loadProvider = async () => {
@@ -46,7 +46,7 @@ function App() {
       setBalance(web3.utils.fromWei(balance, "ether"))
     }
     web3Api.contract && loadBalance()
-  },[web3Api, reloadEffect])
+  },[web3Api, shouldReload])
 
   useEffect(() => {
     const getAccount = async () => {
@@ -63,10 +63,19 @@ function App() {
       from: account,
       value: web3.utils.toWei("1", "ether")
     })
-    reloadEffector()
+    reloadEffect()
 
-  }, [web3Api, account])
+  }, [web3Api, account, reloadEffect])
 
+
+  const withdrawl = async () => {
+    const {contract, web3} = web3Api
+    const withdrawAmount = web3.utils.toWei("0.1", "ether")
+    await contract.withdrawl(withdrawAmount,{
+      from: account,
+    })
+    reloadEffect()
+  }
   // console.log(web3Api.web3);
   return (
     <>
@@ -86,7 +95,7 @@ function App() {
             console.log(accounts)
           }}>Enable Ethereum</button> */}
           <button className='button is-primary mr-2'onClick={addFunds}>Donate 1 Eth</button>
-          <button className='button is-link'>Withdrawl</button>
+          <button className='button is-link' onClick={withdrawl}>Withdrawl some ETH!</button>
         </div>
       </div>
     </>
