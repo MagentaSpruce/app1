@@ -14,6 +14,7 @@ function App() {
   })
 
   const [account, setAccount] = useState(null);
+  const [balance, setBalance] = useState(null);
 
   React.useEffect(() => {
     const loadProvider = async () => {
@@ -34,6 +35,15 @@ function App() {
     }
     loadProvider()
   }, [])
+
+  useEffect(()=> {
+    const loadBalance = async () => {
+      const {contract, web3} = web3Api
+      const balance = await web3.eth.getBalance(contract.address)
+      setBalance(web3.utils.fromWei(balance, "ether"))
+    }
+    web3Api.contract && loadBalance()
+  },[web3Api])
 
   useEffect(() => {
     const getAccount = async () => {
@@ -56,7 +66,7 @@ function App() {
         onClick={()=> web3Api.provider.request({method: "eth_requestAccounts"})}
         >Connect Account</button>}</h1>
           <div className="balance-view is-size-2 mb-4">
-            Current Balance: <strong>10</strong> ETH
+            Current Balance: <strong>{balance}</strong> ETH
           </div>
           {/* <button className="btn mr-2" onClick={async () => {
             const accounts = await window.ethereum.request({method: "eth_requestAccounts"})
