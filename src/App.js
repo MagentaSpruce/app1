@@ -24,6 +24,7 @@ function App() {
 
   const setAccountListener = (provider) => {
     provider.on("accountsChanged", (accounts) => window.location.reload())
+    provider.on("chainChanged", _ => window.location.reload())
   }
 
   React.useEffect(() => {
