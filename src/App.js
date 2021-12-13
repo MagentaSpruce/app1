@@ -20,7 +20,7 @@ function App() {
   const reloadEffect = useCallback(() => reload(!shouldReload),[shouldReload])
 
   const setAccountListener = (provider) => {
-    provider.on("accountsChanged", (accounts) => setAccount(accounts[0]) )
+    provider.on("accountsChanged", (accounts) => window.location.reload())
   }
 
   React.useEffect(() => {
@@ -99,8 +99,8 @@ function App() {
             const accounts = await window.ethereum.request({method: "eth_requestAccounts"})
             console.log(accounts)
           }}>Enable Ethereum</button> */}
-          <button className='button is-primary mr-2'onClick={addFunds}>Donate 1 Eth</button>
-          <button className='button is-link' onClick={withdrawl}>Withdrawl some ETH!</button>
+          <button disabled={!account} className='button is-primary mr-2'onClick={addFunds}>Donate 1 Eth</button>
+          <button disabled={!account} className='button is-link' onClick={withdrawl}>Withdrawl some ETH!</button>
         </div>
       </div>
     </>
