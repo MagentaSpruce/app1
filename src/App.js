@@ -10,7 +10,8 @@ function App() {
   const [web3Api, setWeb3Api] = useState({
     provider: null,
     web3: null,
-    contract: null
+    contract: null,
+    isProviderLoaded: false,
   })
 
   const [account, setAccount] = useState(null);
@@ -34,10 +35,13 @@ function App() {
         setWeb3Api({
           web3: new Web3(provider),
           provider,
-          contract
+          contract,
+          isProviderLoaded: true
         })
       }else{
         console.error("Please install metamask.")
+        setWeb3Api({
+        ...web3Api, isProviderLoaded:true})
       }
  
     }
@@ -86,6 +90,8 @@ function App() {
     <>
       <div className="faucet-wrapper">
         <div className="faucet">
+        { web3Api.isProviderLoaded ? 
+        <div>
         <span>
           <strong>Account : </strong>
         </span>
@@ -100,6 +106,8 @@ function App() {
          <button className='button is-info'
         onClick={()=> web3Api.provider.request({method: "eth_requestAccounts"})}
         >Connect Account</button>}</h1>
+        </div> : <span>Looking for web3...</span>
+        }
           <div className="balance-view is-size-2 mb-4">
             Current Balance: <strong>{balance}</strong> ETH
           </div>
