@@ -16,7 +16,9 @@ function App() {
 
   const [account, setAccount] = useState(null);
   const [balance, setBalance] = useState(null);
-  const [shouldReload, reload] = useState(false)
+  const [shouldReload, reload] = useState(false);
+
+  const canConnectToContract = account && web3Api.contract;
 
   const reloadEffect = useCallback(() => reload(!shouldReload),[shouldReload])
 
@@ -115,13 +117,17 @@ function App() {
         }
           <div className="balance-view is-size-2 mb-4">
             Current Balance: <strong>{balance}</strong> ETH
+            {!canConnectToContract && 
+            <i className='is-block'>
+                Connect to Ganache
+            </i>}
           </div>
           {/* <button className="btn mr-2" onClick={async () => {
             const accounts = await window.ethereum.request({method: "eth_requestAccounts"})
             console.log(accounts)
           }}>Enable Ethereum</button> */}
-          <button disabled={!account} className='button is-primary mr-2'onClick={addFunds}>Donate 1 Eth</button>
-          <button disabled={!account} className='button is-link' onClick={withdrawl}>Withdrawl some ETH!</button>
+          <button disabled={!canConnectToContract} className='button is-primary mr-2'onClick={addFunds}>Donate 1 Eth</button>
+          <button disabled={!canConnectToContract} className='button is-link' onClick={withdrawl}>Withdrawl some ETH!</button>
         </div>
       </div>
     </>
